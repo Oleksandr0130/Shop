@@ -1,30 +1,28 @@
-package de.ait_tr.shop.model.entity;
+package de.ait_tr.shop.model.dto;
 
-import jakarta.persistence.*;
-import org.springframework.security.core.GrantedAuthority;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.*;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
  * @author Sergey Bugaenko
- * {@code @date} 21.08.2024
+ * {@code @date} 03.09.2024
  */
 
-@Entity
-@Table(name = "role")
-public class Role implements GrantedAuthority {
+public class ProductSupplyDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column
     private String title;
+
+    private int quantity;
 
     @Override
     public String toString() {
-        return String.format("Role: id - %d, title - %s", id, title);
+        return String.format("ProductSupplyDto: id - %d, title - '%s', quantity - %d",
+                id, title, quantity);
     }
 
     @Override
@@ -32,14 +30,15 @@ public class Role implements GrantedAuthority {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Role role = (Role) o;
-        return Objects.equals(id, role.id) && Objects.equals(title, role.title);
+        ProductSupplyDto that = (ProductSupplyDto) o;
+        return quantity == that.quantity && Objects.equals(id, that.id) && Objects.equals(title, that.title);
     }
 
     @Override
     public int hashCode() {
         int result = Objects.hashCode(id);
         result = 31 * result + Objects.hashCode(title);
+        result = 31 * result + quantity;
         return result;
     }
 
@@ -59,8 +58,11 @@ public class Role implements GrantedAuthority {
         this.title = title;
     }
 
-    @Override
-    public String getAuthority() {
-        return title;
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }

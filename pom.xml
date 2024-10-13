@@ -135,6 +135,13 @@
             <version>2.3.32</version>
         </dependency>
 
+        <!-- зависимость для записи,хранения,выгрузки файлов(картинок и т.д)  -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-s3</artifactId>
+            <version>1.12.767</version>
+        </dependency>
+
 
 
     </dependencies>

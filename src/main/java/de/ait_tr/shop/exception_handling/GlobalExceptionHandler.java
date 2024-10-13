@@ -1,6 +1,6 @@
 package de.ait_tr.shop.exception_handling;
 
-import de.ait_tr.shop.exception_handling.exeptions.ThirdTestException;
+import de.ait_tr.shop.exception_handling.exceptions.ThirdTestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -9,7 +9,14 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+/**
+ * @author Sergey Bugaenko
+ * {@code @date} 28.08.2024
+ */
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -17,46 +24,55 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ThirdTestException.class)
     public ResponseEntity<Response> handleThirdTestException(ThirdTestException e) {
         Response response = new Response(e.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ValidationResponse> handleValidationException(MethodArgumentNotValidException e) {
-        // создаем список ошибок для накопления сообщений
-        List<String> errors = new ArrayList<>();
-
-        // перебираем все ошибки
-        for (FieldError error : e.getBindingResult().getFieldErrors()) {
-            // добовляем сообщение об ошибки для текущего поля
-           errors.add(error.getField() + " | " + error.getDefaultMessage());
-        }
-
-        // Сщздаем обьект Response с накопленным сообщением
-        ValidationResponse response = new ValidationResponse(errors);
-
-        // возвращаем ResponseEntity с обьектом Response и статусом 400
-
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ValidationResponse> handleValidationException(MethodArgumentNotValidException ex) {
+        // Cоздаем список ошибок для накопления сообщений об ошибках
+        List<String> errors = new ArrayList<>();
+
+        //перебираем все ошибки
+        for (FieldError error: ex.getBindingResult().getFieldErrors()) {
+            // Добавляем сообщение об ошибке для текущего поля
+            errors.add(error.getField() + " ->  " +  error.getDefaultMessage());
+        }
+
+        //Создаем объект Response с накопленным сообщение
+        ValidationResponse response = new ValidationResponse(errors);
+
+        // Возвращаем ResponseEntity с объектом Response и статусом 400
+        return  new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+
+
+
 //    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public ResponseEntity<Response> handleValidationException(MethodArgumentNotValidException e) {
-//        // создам обьект StringBuilder для накопления сообщений
-//        StringBuilder errorMessage = new StringBuilder();
+//    public ResponseEntity<Response> handleValidationException(MethodArgumentNotValidException ex) {
+//        // Cоздаем объект StringBuilder для накопления сообщений об ошибках
+//        StringBuilder errorMessages = new StringBuilder();
 //
-//        // перебираем все ошибки
-//        for (FieldError error : e.getBindingResult().getFieldErrors()) {
-//            // добовляем сообщение об ошибки для текущего поля
-//            errorMessage.append(error.getDefaultMessage()).append("; ");
+//        //перебираем все ошибки
+//        for (FieldError error: ex.getBindingResult().getFieldErrors()) {
+//            // Добавляем сообщение об ошибке для текущего поля
+//            errorMessages.append(error.getDefaultMessage()).append("; ");
 //        }
 //
-//        // Сщздаем обьект Response с накопленным сообщением
-//        Response response = new Response(errorMessage.toString());
+//        //Создаем объект Response с накопленным сообщение
+//        Response response = new Response(errorMessages.toString());
 //
-//        // возвращаем ResponseEntity с обьектом Response и статусом 400
-//
-//        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+//        // Возвращаем ResponseEntity с объектом Response и статусом 400
+//        return  new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 //    }
+
+
+
+
+
+
 
 
 }

@@ -1,10 +1,14 @@
 package de.ait_tr.shop.model.entity;
 
-
 import jakarta.persistence.*;
 
 import java.util.List;
 import java.util.Objects;
+
+/**
+ * @author Sergey Bugaenko
+ * {@code @date} 20.08.2024
+ */
 
 @Entity
 @Table(name = "cart")
@@ -20,11 +24,11 @@ public class Cart {
     private Customer customer;
 
     @ManyToMany
-            @JoinTable(
-                    name = "cart_product",
-                    joinColumns = @JoinColumn(name = "cart_id"),
-                    inverseJoinColumns = @JoinColumn(name = "product_id")
-            )
+    @JoinTable(
+            name = "cart_product",
+            joinColumns = @JoinColumn(name = "cart_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
     List<Product> products;
 
     @Override
@@ -37,13 +41,17 @@ public class Cart {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Cart cart = (Cart) o;
         return Objects.equals(id, cart.id) && Objects.equals(customer, cart.customer) && Objects.equals(products, cart.products);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, customer, products);
+        int result = Objects.hashCode(id);
+        result = 31 * result + Objects.hashCode(customer);
+        result = 31 * result + Objects.hashCode(products);
+        return result;
     }
 
     public Long getId() {

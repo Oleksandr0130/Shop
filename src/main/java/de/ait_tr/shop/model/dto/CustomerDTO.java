@@ -1,48 +1,26 @@
 package de.ait_tr.shop.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.util.Objects;
+/**
+ * @author Sergey Bugaenko
+ * {@code @date} 27.08.2024
+ */
 
 //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class CustomerDTO {
 
-    @Schema(description = "Customer unique identifier", example = "777", accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
-
-    @Schema(description = "Customer name", example = "Aleksander")
     private String name;
-
-    @Schema(description = "Customer is active or not active")
     private boolean active;
-
     @JsonManagedReference
-    private CartDTO cart;
+    private CartDto cart;
 
-    public CustomerDTO() {
-    }
 
-    public CustomerDTO(Long id, String name, boolean active) {
-        this.id = id;
-        this.name = name;
-        this.active = active;
-    }
-
-    public CartDTO getCart() {
-        return cart;
-    }
-
-    public void setCart(CartDTO cart) {
-        this.cart = cart;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
+    @Override
+    public String toString() {
+        return String.format("CustomerDTO: id - %d, name - %s, active - %s, cart_id: %d",
+                id, name,  active ? "yes" : "no", cart.getId() );
     }
 
     public Long getId() {
@@ -61,21 +39,19 @@ public class CustomerDTO {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return String.format("CustomerDTO: id - %s, name - %s, active - %s ", id, name, active);
+    public boolean isActive() {
+        return active;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CustomerDTO that = (CustomerDTO) o;
-        return active == that.active && Objects.equals(id, that.id) && Objects.equals(name, that.name);
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, active);
+    public CartDto getCart() {
+        return cart;
+    }
+
+    public void setCart(CartDto cart) {
+        this.cart = cart;
     }
 }

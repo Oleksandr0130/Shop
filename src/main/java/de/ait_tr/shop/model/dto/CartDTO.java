@@ -5,7 +5,13 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.util.List;
 import java.util.Objects;
 
-public class CartDTO {
+/**
+ * @author Sergey Bugaenko
+ * {@code @date} 27.08.2024
+ */
+
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class CartDto {
 
     private Long id;
 
@@ -14,24 +20,13 @@ public class CartDTO {
 
     List<ProductDTO> products;
 
+
     @Override
     public String toString() {
         return String.format("CartDTO: id: %d, products: %s, customer: %s",
                 id, products == null ? "null" : products, customer);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CartDTO cartDTO = (CartDTO) o;
-        return Objects.equals(id, cartDTO.id) && Objects.equals(customer, cartDTO.customer) && Objects.equals(products, cartDTO.products);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, customer, products);
-    }
 
     public Long getId() {
         return id;
@@ -39,6 +34,14 @@ public class CartDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public CustomerDTO getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(CustomerDTO customer) {
+        this.customer = customer;
     }
 
     public List<ProductDTO> getProducts() {
@@ -49,11 +52,20 @@ public class CartDTO {
         this.products = products;
     }
 
-    public CustomerDTO getCustomer() {
-        return customer;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CartDto cartDto = (CartDto) o;
+        return Objects.equals(id, cartDto.id) && Objects.equals(customer, cartDto.customer) && Objects.equals(products, cartDto.products);
     }
 
-    public void setCustomer(CustomerDTO customer) {
-        this.customer = customer;
+    @Override
+    public int hashCode() {
+        int result = Objects.hashCode(id);
+        result = 31 * result + Objects.hashCode(customer);
+        result = 31 * result + Objects.hashCode(products);
+        return result;
     }
 }

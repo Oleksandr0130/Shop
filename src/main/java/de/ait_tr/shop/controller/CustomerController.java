@@ -1,84 +1,93 @@
 package de.ait_tr.shop.controller;
 
-import de.ait_tr.shop.model.dto.CustomerDTO;
+import de.ait_tr.shop.exception_handling.exceptions.FirstTestException;
+import de.ait_tr.shop.exception_handling.exceptions.ThirdTestException;
+import de.ait_tr.shop.model.entity.Customer;
 import de.ait_tr.shop.service.interfaces.CustomerService;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * @author Sergey Bugaenko
+ * {@code @date} 20.08.2024
+ */
+
 @RestController
 @RequestMapping("/customers")
-public class CustomerController {
+public class CustomerController   {
 
-    private final CustomerService customerService;
+    private final CustomerService service;
 
-
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
+    public CustomerController(CustomerService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO) {
-        return customerService.saveCustomer(customerDTO);
+    public Customer save(@RequestBody Customer customer) {
+        return service.save(customer);
+    }
+
+    @GetMapping
+    public List<Customer> getAllActiveCustomers() {
+        return service.getAllActiveCustomers();
     }
 
     @GetMapping("/{id}")
-    public CustomerDTO getById(@PathVariable long id) {
-        return customerService.getById(id);
+    public Customer getById(@PathVariable long id) {
+
+        return service.getById(id);
     }
 
     @PutMapping
-    public CustomerDTO updateCustomer(@RequestBody CustomerDTO customerDTO) {
-        return null;
+    public Customer update(@RequestBody Customer customer) {
+        return service.update(customer);
     }
 
-    //Todo
-    public List<CustomerDTO> getAll() {
-        return List.of();
-    }
-
+    // /customers/333
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable long id) {
-        customerService.deleteById(id);
+        service.deleteById(id);
     }
 
+    // /customers/fff
     @DeleteMapping
     public void deleteByName(@RequestParam String name) {
-        customerService.deleteByName(name);
+        service.deleteByName(name);
     }
 
-    //Todo
+
     public void restoreById(long id) {
 
     }
 
-    //Todo
+
     public long getActiveCustomerCount() {
         return 0;
     }
 
-    //Todo
+
     public BigDecimal getTotalCostOfCustomersProducts(long customerId) {
         return null;
     }
 
-    //Todo
+
     public BigDecimal getAverageCostOfCustomersProducts(long customerId) {
         return null;
     }
 
-    //Todo
+
     public void addProductToCustomersCart(long customerId, long productId) {
 
     }
 
-    //Todo
-    public void removeProductToCustomersCart(long customerId, long productId) {
+
+    public void removeProductFromCustomersCart(long customerId, long productId) {
 
     }
 
-    //Todo
+
     public void clearCustomersCart(long customerId) {
 
     }

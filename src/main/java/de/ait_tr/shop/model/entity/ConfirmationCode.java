@@ -1,10 +1,14 @@
 package de.ait_tr.shop.model.entity;
 
-
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+
+/**
+ * @author Sergey Bugaenko
+ * {@code @date} 30.08.2024
+ */
 
 @Entity
 @Table(name = "confirm_code")
@@ -36,7 +40,7 @@ public class ConfirmationCode {
 
     @Override
     public String toString() {
-        return String.format("Confirm code id: %d, Code: %s, user: %s, expired: %s",
+        return String.format("Confirm code id: - %d, Code: %s, user: %s, expired: %s",
                 id, code, user == null ? "empty" : user.getUsername(), expired);
     }
 
@@ -44,13 +48,18 @@ public class ConfirmationCode {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         ConfirmationCode that = (ConfirmationCode) o;
         return Objects.equals(id, that.id) && Objects.equals(code, that.code) && Objects.equals(expired, that.expired) && Objects.equals(user, that.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, code, expired, user);
+        int result = Objects.hashCode(id);
+        result = 31 * result + Objects.hashCode(code);
+        result = 31 * result + Objects.hashCode(expired);
+        result = 31 * result + Objects.hashCode(user);
+        return result;
     }
 
     public Long getId() {

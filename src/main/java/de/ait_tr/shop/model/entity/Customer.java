@@ -2,7 +2,13 @@ package de.ait_tr.shop.model.entity;
 
 import jakarta.persistence.*;
 
+
 import java.util.Objects;
+
+/**
+ * @author Sergey Bugaenko
+ * {@code @date} 19.08.2024
+ */
 
 @Entity
 @Table(name = "customer")
@@ -15,19 +21,35 @@ public class Customer {
 
     @Column(name = "name")
     private String name;
-    @Column(name = "active")
+
+    @Column
     private boolean active;
 
     @OneToOne(mappedBy = "customer", cascade = CascadeType.PERSIST)
     private Cart cart;
 
-    public Customer() {
+
+    @Override
+    public String toString() {
+        return String.format("Customer: id - %d, name - %s, active - %s, cart_id: %d",
+                id, name,  active ? "yes" : "no", cart.getId() );
     }
 
-    public Customer(Long id, String name, boolean active) {
-        this.id = id;
-        this.name = name;
-        this.active = active;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Customer customer = (Customer) o;
+        return active == customer.active && Objects.equals(id, customer.id) && Objects.equals(name, customer.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hashCode(id);
+        result = 31 * result + Objects.hashCode(name);
+        result = 31 * result + Boolean.hashCode(active);
+        return result;
     }
 
     public Long getId() {
@@ -52,24 +74,5 @@ public class Customer {
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Customer: id - %s, name - %s, active - %s, cart_id: %d",
-                id, name, active ? "yes" : "no", cart.getId());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Customer customer = (Customer) o;
-        return active == customer.active && Objects.equals(id, customer.id) && Objects.equals(name, customer.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, active);
     }
 }

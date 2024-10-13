@@ -1,12 +1,13 @@
 package de.ait_tr.shop.controller;
 
-import de.ait_tr.shop.exception_handling.Response;
-import de.ait_tr.shop.model.dto.UserRegisterDTO;
+import de.ait_tr.shop.exception_handling.Response;import de.ait_tr.shop.model.dto.UserRegisterDto;
 import de.ait_tr.shop.service.interfaces.UserService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * @author Sergey Bugaenko
+ * {@code @date} 02.09.2024
+ */
 
 @RestController
 @RequestMapping("/register")
@@ -19,8 +20,13 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public Response register(@RequestBody UserRegisterDTO userRegisterDTO) {
-        userService.register(userRegisterDTO);
-        return new Response("Registration complete. Please check your email.");
+    public Response registerUser(@RequestBody UserRegisterDto dto) {
+        System.out.println(dto.toString());
+        userService.register(dto);
+        return new Response("Registration Complete. Please check your email");
     }
+
+
+
+
 }

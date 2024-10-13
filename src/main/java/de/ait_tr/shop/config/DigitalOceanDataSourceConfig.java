@@ -8,11 +8,16 @@ import org.springframework.context.annotation.Profile;
 
 import javax.sql.DataSource;
 
+/**
+ * @author Sergey Bugaenko
+ * {@code @date} 29.08.2024
+ */
+
 @Profile("fake")
 @Configuration
 public class DigitalOceanDataSourceConfig {
 
-    @Value("${DB_USER}")
+    @Value("${DB_USERNAME}")
     private String username;
 
     @Value("${DB_PASSWORD}")
@@ -28,10 +33,11 @@ public class DigitalOceanDataSourceConfig {
     private String dbName;
 
     @Bean
-    public DataSource dataSource(){
+    public DataSource dataSource() {
         return DataSourceBuilder.create()
                 .driverClassName("org.postgresql.Driver")
                 .url("jdbc:postgresql://" + host + ":" + port + "/" + dbName)
+//                .url(String.format("jdbc:postgresql://%s:%s/%s", host, port, dbName )
                 .username(username)
                 .password(password)
                 .build();

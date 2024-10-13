@@ -3,6 +3,11 @@ package de.ait_tr.shop.exception_handling;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * @author Sergey Bugaenko
+ * {@code @date} 28.08.2024
+ */
+
 public class ValidationResponse {
     private List<String> messages;
 
@@ -23,6 +28,7 @@ public class ValidationResponse {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         ValidationResponse that = (ValidationResponse) o;
         return Objects.equals(messages, that.messages);
     }

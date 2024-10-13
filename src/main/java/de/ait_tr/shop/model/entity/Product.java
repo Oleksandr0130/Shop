@@ -6,6 +6,10 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+/**
+ * @author Sergey Bugaenko
+ * {@code @date} 16.08.2024
+ */
 
 @Entity
 @Table(name = "product")
@@ -16,28 +20,46 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Long id; //// null / 0
 
-    @Schema(description = "Product title", example = "MSI i7")
+    @Schema(description = "Product title", example = "Banana")
     @Column(name = "title")
     private String title;
 
-    @Schema(description = "Product price", example = "1500.00")
+    @Schema(description = "Product price", example = "8.50")
     @Column(name = "price")
     private BigDecimal price;
 
     @Schema(description = "Is product available", accessMode = Schema.AccessMode.READ_ONLY)
-    @Column(name = "active")
-    private boolean active;
+    @Column
+    private boolean active; // null / false
 
-    public Product() {
+    @Column(name = "image")
+    private String image;
+
+    @Column
+    private int quantity;
+
+    @Override
+    public String toString() {
+        return String.format("Product: id - %d, title - %s, price - %s, active - %s",
+                id, title, price, active ? "yes" : "no" );
     }
 
-    public Product(Long id, String title, BigDecimal price, boolean active) {
-        this.id = id;
-        this.title = title;
-        this.price = price;
-        this.active = active;
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public Long getId() {
@@ -73,21 +95,22 @@ public class Product {
     }
 
     @Override
-    public String toString() {
-        return String.format("Product: id - %s, title - %s, price - %s, active - %s",
-                id, title, price, active ? "yes" : "no");
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Product product = (Product) o;
-        return active == product.active && Objects.equals(id, product.id) && Objects.equals(title, product.title) && Objects.equals(price, product.price);
+        return active == product.active && quantity == product.quantity && Objects.equals(id, product.id) && Objects.equals(title, product.title) && Objects.equals(price, product.price) && Objects.equals(image, product.image);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, price, active);
+        int result = Objects.hashCode(id);
+        result = 31 * result + Objects.hashCode(title);
+        result = 31 * result + Objects.hashCode(price);
+        result = 31 * result + Boolean.hashCode(active);
+        result = 31 * result + Objects.hashCode(image);
+        result = 31 * result + quantity;
+        return result;
     }
 }

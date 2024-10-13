@@ -1,4 +1,6 @@
 package de.ait_tr.shop.model.dto;
 
-public record UserRegisterDTO(String username, String password, String email) {
+import java.util.Objects;
+
+public record UserRegisterDto(String username, String password, String email) {
 }

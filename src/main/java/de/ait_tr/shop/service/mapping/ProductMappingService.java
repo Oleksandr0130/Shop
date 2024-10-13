@@ -1,6 +1,7 @@
 package de.ait_tr.shop.service.mapping;
 
 import de.ait_tr.shop.model.dto.ProductDTO;
+import de.ait_tr.shop.model.dto.ProductSupplyDto;
 import de.ait_tr.shop.model.entity.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,6 +14,8 @@ public interface ProductMappingService {
     @Mapping(target = "image", ignore = true)
     Product mapDtoToEntity(ProductDTO dto);
     ProductDTO mapEntityToDto(Product entity);
+
+    ProductSupplyDto mapEntityToSupplyDto(Product entity);
 
 //    public Product mapDtoToEntity(ProductDTO dto){
 //        Product entity = new Product();

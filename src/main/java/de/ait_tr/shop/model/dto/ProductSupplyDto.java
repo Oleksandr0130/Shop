@@ -1,9 +1,5 @@
 package de.ait_tr.shop.model.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.*;
-
-import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
@@ -29,17 +25,13 @@ public class ProductSupplyDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         ProductSupplyDto that = (ProductSupplyDto) o;
         return quantity == that.quantity && Objects.equals(id, that.id) && Objects.equals(title, that.title);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hashCode(id);
-        result = 31 * result + Objects.hashCode(title);
-        result = 31 * result + quantity;
-        return result;
+        return Objects.hash(id, title, quantity);
     }
 
     public Long getId() {

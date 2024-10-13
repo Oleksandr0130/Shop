@@ -3,6 +3,7 @@ package de.ait_tr.shop.service;
 import de.ait_tr.shop.exception_handling.exeptions.FirstTestException;
 import de.ait_tr.shop.exception_handling.exeptions.ThirdTestException;
 import de.ait_tr.shop.model.dto.ProductDTO;
+import de.ait_tr.shop.model.dto.ProductSupplyDto;
 import de.ait_tr.shop.model.entity.Product;
 import de.ait_tr.shop.repository.ProductRepository;
 import de.ait_tr.shop.service.interfaces.ProductService;
@@ -79,6 +80,14 @@ public class ProductServiceImpl implements ProductService {
 //        }
 //        return mapper.mapEntityToDto(product);
 //    }
+
+
+    @Override
+    public List<ProductSupplyDto> getAllActiveProductsForSupply() {
+        return repository.findAllByActiveTrue().stream()
+                .map(mapper::mapEntityToSupplyDto)
+                .toList();
+    }
 
     @Override
     public ProductDTO updateProduct(Long id, ProductDTO productDTO) {

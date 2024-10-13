@@ -34,6 +34,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
 //                                .anyRequest().permitAll()
                                 .requestMatchers(HttpMethod.GET,"/hello").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/system/products").hasRole("SUPPLIER")
                                 .requestMatchers(HttpMethod.POST,"/register","auth/register").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/confirm").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/refresh").permitAll()

@@ -5,11 +5,6 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Objects;
 
-/**
- * @author Sergey Bugaenko
- * {@code @date} 21.08.2024
- */
-
 @Entity
 @Table(name = "role")
 public class Role implements GrantedAuthority {
@@ -18,29 +13,25 @@ public class Role implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-
-    @Column
+    @Column(name = "title")
     private String title;
 
     @Override
     public String toString() {
-        return String.format("Role: id - %d, title - %s", id, title);
+        return String.format("Role [id=%d, title=%s]", id, title);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Role role = (Role) o;
         return Objects.equals(id, role.id) && Objects.equals(title, role.title);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hashCode(id);
-        result = 31 * result + Objects.hashCode(title);
-        return result;
+        return Objects.hash(id, title);
     }
 
     public Long getId() {

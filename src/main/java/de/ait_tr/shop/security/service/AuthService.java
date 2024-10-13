@@ -13,18 +13,12 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author Sergey Bugaenko
- * {@code @date} 22.08.2024
- */
-
 @Service
 public class AuthService {
 
     private final UserDetailsService userService;
     private final TokenService tokenService;
     private final BCryptPasswordEncoder passwordEncoder;
-    // username : token
     private final Map<String, String> refreshStorage;
 
     public AuthService(UserDetailsService userService, TokenService tokenService, BCryptPasswordEncoder passwordEncoder) {
@@ -45,19 +39,8 @@ public class AuthService {
 
             return new TokenResponseDto(accessToken, refreshToken);
         }
-
-        throw new AuthException("Incorrect login and / or password");
+        throw new AuthException("Incorrect Login and / or password");
     }
-
-
-    /*
-    1. Принять данные пользователя
-    2. Проверка логина и пароля
-    3. Генерация токенов
-    4. Сохранить refresh-токен в хранилище
-    5. Сформировать ответ
-     */
-
 
     public TokenResponseDto refreshAccessToken(RefreshRequestDto refreshRequestDto) throws AuthException {
         String token = refreshRequestDto.refreshToken();
@@ -65,11 +48,10 @@ public class AuthService {
         boolean isValid = tokenService.validateRefreshToken(token);
 
         Claims refreshClaims = tokenService.getRefreshClaims(token);
-        String  username = refreshClaims.getSubject();
+        String username = refreshClaims.getSubject();
 
         String savedToken = refreshStorage.get(username);
 
-        // boolean isVal2 = (savedToken != null && savedToken.equals(token));
         boolean isSaved = token.equals(savedToken);
 
         if (isValid && isSaved) {
@@ -80,17 +62,6 @@ public class AuthService {
             return new TokenResponseDto(accessToken, token);
         }
 
-        throw new AuthException("Invalid refresh token. Re login please!");
+        throw new AuthException("Invalid Refresh Token");
     }
-
-    /*
-    1. Прием данных
-    2. Валидация токена в сервисе
-    3. Извлечь информацию о пользователе
-    4. Проверяем наличие токена в нашем токен Storage
-    5. Получить пользователя из базы
-    6. Генерируем новый AccessToken
-    7. Формирование и возврат ответа
-     */
-
 }

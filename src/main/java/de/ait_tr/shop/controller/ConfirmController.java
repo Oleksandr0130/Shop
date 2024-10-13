@@ -7,11 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * @author Sergey Bugaenko
- * {@code @date} 03.09.2024
- */
-
 @RestController
 @RequestMapping("/confirm")
 public class ConfirmController {
@@ -23,7 +18,7 @@ public class ConfirmController {
     }
 
     @GetMapping
-    public Response confirmEmail(@RequestParam String code) {
+    public Response confirmEmail(@RequestParam String code){
         return new Response(userService.confirmationMailByCode(code));
     }
 }

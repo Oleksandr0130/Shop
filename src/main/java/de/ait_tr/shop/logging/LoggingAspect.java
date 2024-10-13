@@ -11,11 +11,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Sergey Bugaenko
- * {@code @date} 27.08.2024
- */
-
 @Aspect
 @Component
 public class LoggingAspect {
@@ -23,40 +18,39 @@ public class LoggingAspect {
     private final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
 
     @Pointcut("execution(* de.ait_tr.shop.service.ProductServiceImpl.saveProduct(..))")
-    public void saveProduct() {
-        // Метод без тела, используется только для задания PointCur
+    public void saveProduct(){
+        // метод без тела, используется только для задания PointCut
     }
 
     @Before("saveProduct()")
-    public void beforeSavingProduct(JoinPoint joinPoint) {
-        // Извлекаем параметры вызова метода
+    public void beforeSavingProduct(JoinPoint joinPoint){
+        // извлекаем параметры из метода
         Object[] params = joinPoint.getArgs();
         logger.info("Method save in class ProductServiceImpl was called with parameter: {}", params[0]);
     }
 
     @After("saveProduct()")
-    public void afterSavingProduct() {
+    public void afterSavingProduct(){
         logger.info("Method save in class ProductServiceImpl finished its work");
     }
 
     @Pointcut("execution(* de.ait_tr.shop.service.ProductServiceImpl.getById(..))")
-    public void getProductById() {
-    }
+    public void getProductById(){    }
 
     @AfterReturning(pointcut = "getProductById()", returning = "result")
-    public void afterReturningFromGetById(Object result) {
+    public void afterReturningFromGetById(Object result){
         logger.info("Method getById successfully returned result: {}", result);
     }
 
     @AfterThrowing(pointcut = "execution(* de.ait_tr.shop.service.ProductServiceImpl.getById(..))", throwing = "ex")
-    public void afterThrowingExceptionFromGetById(JoinPoint joinPoint, Exception ex) {
+    public void afterThrowingExceptionFromGetById(JoinPoint joinPoint, Exception ex){
         Object[] params = joinPoint.getArgs();
         logger.error("Method getById with param {} throw an exception: {}", params[0], ex.getMessage());
-
     }
 
     @Pointcut("execution(* de.ait_tr.shop.service.ProductServiceImpl.getAll(..))")
-    public void getAllProducts() {
+    public void getAllProducts(){
+
     }
 
     @Around("getAllProducts()")
@@ -64,25 +58,23 @@ public class LoggingAspect {
         Object result = null;
 
         try {
-            // Логирование до выполнения основного метода
+
+
+            //Логирование до выполнения основного метода
             logger.info("Method getAllProducts called");
 
-            //Выполняем основной метод и сохраняем результат
+            // выполняе основной метод и сохраняем в result
             result = joinPoint.proceed();
 
-            // Логируем после успешного выполнения основного метода
             logger.info("Method getAll successfully returned result: {}", result);
 
-            // Изменяем результат, добавляя дополнительную логику
+            // изменяем результат добавляя доп. логику
             result = ((List<ProductDTO>) result).stream()
                     .filter(product -> product.getPrice().doubleValue() > 0)
                     .toList();
-
-        } catch (Throwable ex) {
+        } catch (Throwable ex){
             logger.error("Method getAllProducts called with exception: {}", ex.getMessage());
         }
-
         return result == null ? new ArrayList<>() : result;
     }
-
 }

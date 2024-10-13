@@ -1,14 +1,9 @@
 package de.ait_tr.shop.service.interfaces;
 
-import de.ait_tr.shop.model.dto.UserRegisterDto;
-
-/**
- * @author Sergey Bugaenko
- * {@code @date} 02.09.2024
- */
+import de.ait_tr.shop.model.dto.UserRegisterDTO;
 
 public interface UserService {
 
-    void register(UserRegisterDto registerDto);
+    void register(UserRegisterDTO user);
     String confirmationMailByCode(String code);
 }

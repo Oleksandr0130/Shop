@@ -1,45 +1,55 @@
 package de.ait_tr.shop.service;
 
-import de.ait_tr.shop.exception_handling.exceptions.ThirdTestException;
+import de.ait_tr.shop.model.dto.CustomerDTO;
 import de.ait_tr.shop.model.entity.Customer;
+import de.ait_tr.shop.repository.CustomerRepository;
 import de.ait_tr.shop.service.interfaces.CustomerService;
+import de.ait_tr.shop.service.mapping.CustomerMappingService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-/**
- * @author Sergey Bugaenko
- * {@code @date} 20.08.2024
- */
-
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
+    private final CustomerRepository repository;
+    private final CustomerMappingService mapper;
 
-    // TODO реализовать
+    public CustomerServiceImpl(CustomerRepository repository, CustomerMappingService mapper) {
+        this.repository = repository;
+        this.mapper = mapper;
+    }
+
 
     @Override
-    public Customer save(Customer customer) {
+    public CustomerDTO saveCustomer(CustomerDTO customerDTO) {
+        Customer customer = mapper.mapDtoToEntity(customerDTO);
+//        customer.setActive(true);
+        return mapper.mapEntityToDto(repository.save(customer));
+    }
+
+    @Override
+    public CustomerDTO getById(long id) {
+        Customer customer = repository.findById(id).orElse(null);
+        if (customer == null || !customer.isActive()) {
         return null;
-    }
-
-    @Override
-    public List<Customer> getAllActiveCustomers() {
-        return List.of();
-    }
-
-    @Override
-    public Customer getById(long id) {
-        if (id == 5) {
-            throw new ThirdTestException("Customer controller exception");
         }
-        return null;
+        return mapper.mapEntityToDto(customer);
     }
 
     @Override
-    public Customer update(Customer customer) {
+    public CustomerDTO updateCustomer(CustomerDTO customerDTO) {
         return null;
+    }
+
+
+    @Override
+    public List<CustomerDTO> getAll() {
+        return repository.findAll().stream()
+                .filter(Customer::isActive)
+                .map(mapper::mapEntityToDto)
+                .toList();
     }
 
     @Override
@@ -78,7 +88,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void removeProductFromCustomersCart(long customerId, long productId) {
+    public void removeProductToCustomersCart(long customerId, long productId) {
 
     }
 

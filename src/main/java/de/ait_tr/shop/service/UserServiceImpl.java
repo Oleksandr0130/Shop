@@ -1,24 +1,21 @@
 package de.ait_tr.shop.service;
 
-import de.ait_tr.shop.model.dto.UserRegisterDto;
-import de.ait_tr.shop.model.entity.ConfirmationCode;import de.ait_tr.shop.model.entity.User;
+import de.ait_tr.shop.model.dto.UserRegisterDTO;
+import de.ait_tr.shop.model.entity.ConfirmationCode;
+import de.ait_tr.shop.model.entity.User;
 import de.ait_tr.shop.repository.UserRepository;
-import de.ait_tr.shop.service.interfaces.ConfirmationCodeService;import de.ait_tr.shop.service.interfaces.EmailService;
+import de.ait_tr.shop.service.interfaces.ConfirmationCodeService;
+import de.ait_tr.shop.service.interfaces.EmailService;
 import de.ait_tr.shop.service.interfaces.RoleService;
 import de.ait_tr.shop.service.interfaces.UserService;
 import de.ait_tr.shop.service.mapping.UserMappingService;
+import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
-
-/**
- * @author Sergey Bugaenko
- * {@code @date} 02.09.2024
- */
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -41,57 +38,52 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void register(UserRegisterDto registerDto) {
-        User user = userMappingService.mapDtoToEntity(registerDto);
+    public void register(UserRegisterDTO registerDTO) {
+        User user = userMappingService.mapDtoToEntity(registerDTO);
 
         Optional<User> optionalUser = userRepository.findByEmail(user.getEmail());
 
-        // Проверка, существует ли уже пользователь с таким email
+        //проверка существует ли пользователь с таким емаил
         if (optionalUser.isPresent() && optionalUser.get().isActive()) {
             throw new RuntimeException("Email " + user.getEmail() + " already in use");
         }
-
-        if (optionalUser.isPresent()) {
-            // Пользователь в базе со статусов active - false
+        if (optionalUser.isPresent()){
+            // Пользователи в базе со статусом active- false
             user = optionalUser.get();
             ConfirmationCode codeOld = confirmationCodeService.findCodeByUser(user).orElse(null);
             if (codeOld != null) {
                 confirmationCodeService.remove(codeOld);
             }
-        } else {
-            // Регистрация нового пользователь
-            // Присваиваем роль User новому пользователю
+        }else {
+            // Регистрация нового пользователя
+            // Присваеваем роль User новому пользователю
             user.setRoles(Set.of(roleService.getRoleUser()));
         }
+        // Устанавливаем зашифрованый пароль
+        user.setPassword(passwordEncoder.encode(registerDTO.password()));
 
-        //Устанавливаем зашифрованный пароль
-        user.setPassword(passwordEncoder.encode(registerDto.password()));
-
-        // На всякий случай
         user.setActive(false);
 
-        // Сохранить пользователя в БД
+        // Сохраняем пользователя в БД
         userRepository.save(user);
 
-        // Отправляем письмо с кодом подтверждения
+        // отправляем письмо с кодом подтверждения
         emailService.sendConfirmationEmail(user);
-
     }
 
-    @Transactional
     @Override
     public String confirmationMailByCode(String code) {
         ConfirmationCode confirmationCode = confirmationCodeService.findByCode(code).orElseThrow(
-                () -> new RuntimeException("Code not found")
+                () -> new RuntimeException("Confirmation code not found")
         );
 
-        if (confirmationCode.getExpired().isAfter(LocalDateTime.now())) {
+        if (confirmationCode.getExpired().isAfter(LocalDateTime.now())){
             User user = confirmationCode.getUser();
             user.setActive(true);
             userRepository.save(user);
-            return user.getEmail() + " confirmed!";
+            return  user.getEmail() + " confirmed!";
         }
-
         throw new RuntimeException("Wrong code");
+
     }
 }

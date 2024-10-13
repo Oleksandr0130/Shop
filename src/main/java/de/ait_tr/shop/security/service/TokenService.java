@@ -1,7 +1,7 @@
 package de.ait_tr.shop.security.service;
 
+
 import de.ait_tr.shop.model.entity.Role;
-import de.ait_tr.shop.model.entity.User;
 import de.ait_tr.shop.repository.RoleRepository;
 import de.ait_tr.shop.security.AuthInfo;
 import io.jsonwebtoken.Claims;
@@ -15,13 +15,11 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
-
-/**
- * @author Sergey Bugaenko
- * {@code @date} 22.08.2024
- */
 
 @Service
 public class TokenService {
@@ -39,12 +37,9 @@ public class TokenService {
     }
 
     public String generateAccessToken(UserDetails user) {
-        // Формируем время окончания действия токена
-        Instant now = Instant.now(); // текущее время в UTC
-        Instant expiration = now.plus(1, ChronoUnit.DAYS); // прибавляем 1 день к текущему времени
-
-        Date expirationDate = Date.from(expiration); // конвертируем Instant -> Date
-
+        Instant now = Instant.now();
+        Instant expiration = now.plus(1, ChronoUnit.DAYS);
+        Date expirationDate = Date.from(expiration);
         return Jwts.builder()
                 .subject(user.getUsername())
                 .expiration(expirationDate)
@@ -55,10 +50,9 @@ public class TokenService {
     }
 
     public String generateRefreshToken(UserDetails user) {
-        Instant now = Instant.now(); // текущее время в UTC
-        Instant expiration = now.plus(10, ChronoUnit.DAYS); // прибавляем 1 день к текущему времени
-
-        Date expirationDate = Date.from(expiration); // конвертируем Instant -> Date
+        Instant now = Instant.now();
+        Instant expiration = now.plus(10, ChronoUnit.DAYS);
+        Date expirationDate = Date.from(expiration);
 
         return Jwts.builder()
                 .subject(user.getUsername())
@@ -103,11 +97,7 @@ public class TokenService {
         return getClaims(refreshToken, refreshKey);
     }
 
-
     public AuthInfo mapClaimsToAuthInfo(Claims claims) {
-        // 1. Имя пользователя (username)
-        // 2. Роли пользователя (roles)
-
         String username = claims.getSubject();
 
         @SuppressWarnings("unchecked")
@@ -120,18 +110,4 @@ public class TokenService {
 
         return new AuthInfo(username, authorities);
     }
-
 }
-
-/*
-[
-    {
-    "authority": "ROLE_USER"
-    },
-    {
-    "authority": "ROLE_ADMIN"
-    }
-]
-
-
- */

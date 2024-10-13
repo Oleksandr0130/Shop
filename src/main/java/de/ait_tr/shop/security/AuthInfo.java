@@ -7,13 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Collection;
 import java.util.Set;
 
-/**
- * @author Sergey Bugaenko
- * {@code @date} 22.08.2024
- */
-
 public class AuthInfo implements Authentication {
-
     private boolean authenticated;
     private String username;
     private Set<Role> roles;

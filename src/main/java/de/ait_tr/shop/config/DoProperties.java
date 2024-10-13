@@ -1,12 +1,9 @@
 package de.ait_tr.shop.config;
 
+// TODO Добавить секретный + access ключи с DigitalOcean и урл + регион с bucket в env file!!!!
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-
-/**
- * @author Sergey Bugaenko
- * {@code @date} 02.09.2024
- */
 
 @Configuration
 @ConfigurationProperties(prefix = "do")

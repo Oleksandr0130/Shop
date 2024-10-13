@@ -12,11 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.UUID;
 
-/**
- * @author Sergey Bugaenko
- * {@code @date} 03.09.2024
- */
-
 @Service
 public class FileServiceImpl implements FileService {
 
@@ -28,26 +23,29 @@ public class FileServiceImpl implements FileService {
         this.productService = productService;
     }
 
-
     @Override
     public String upload(MultipartFile file, String productTitle) {
-        try {
-            // Метаданные
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentType(file.getContentType());
 
-            // Генерируем уникальное имя файла
+        try {
+
+        // Методанные
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(file.getContentType());
+
+        // Генерируем уникальное имя файла
             String uniqueFileName = generateUniqueFileName(file);
 
-            // Создаем запрос загрузки файла
+        // Создаем запрос загрузки файла
             PutObjectRequest request = new PutObjectRequest(
+
+                    //TODO подставляем имя папки куда сложить файл в DigitalOcean!!!!
                     "cohort-44-bucket",
                     uniqueFileName,
                     file.getInputStream(),
                     metadata
             );
 
-            //Устанавливаем публичный доступ для файла (по умолчанию только для обладателя ключей)
+            // Устанавливаем публичный доступ для файла (по умолчанию только для обладателя ключей)
             request.withCannedAcl(CannedAccessControlList.PublicRead);
 
             // Физическая загрузка файла в облако
@@ -58,21 +56,18 @@ public class FileServiceImpl implements FileService {
             // Привязать url к продукту
             productService.attachImage(url, productTitle);
 
-            return url;
+        return url;
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    // "ba.n.ana.jpeg"
-    // "banana-thrwrt6dsgerg.jpeg"
-
     private String generateUniqueFileName(MultipartFile file) {
         String sourceFilename = file.getOriginalFilename();
-        int dotIndex = sourceFilename.lastIndexOf('.');
-        String fileName = sourceFilename.substring(0, dotIndex);
-        String extension = sourceFilename.substring(dotIndex);
+        int doIndex = sourceFilename.lastIndexOf('.');
+        String fileName = sourceFilename.substring(0, doIndex);
+        String extension = sourceFilename.substring(doIndex);
 
         return String.format("%s-%s%s", fileName, UUID.randomUUID().toString(), extension);
     }

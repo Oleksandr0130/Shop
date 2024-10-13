@@ -7,12 +7,8 @@ import de.ait_tr.shop.service.interfaces.ConfirmationCodeService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;import java.util.UUID;
-
-/**
- * @author Sergey Bugaenko
- * {@code @date} 30.08.2024
- */
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ConfirmationCodeServiceImpl implements ConfirmationCodeService {
@@ -24,20 +20,17 @@ public class ConfirmationCodeServiceImpl implements ConfirmationCodeService {
     }
 
     @Override
-    public String generationConfirmationCode(User user) {
-        // Генерация уникально кода (использую UUID)
+    public String generateConfirmationCode(User user) {
+        //Генерация уникального кода (используем UUID)
         String code = UUID.randomUUID().toString();
 
-        // Создание объекта ConfirmCode и сохранение его в базу
+        //Создание обьекта ConfirmCode и сохранение его в базу
         ConfirmationCode confirmationCode = new ConfirmationCode();
         confirmationCode.setCode(code);
         confirmationCode.setUser(user);
         confirmationCode.setExpired(LocalDateTime.now().plusDays(1)); // срок действия 1 день
-//        confirmationCode.setExpired(LocalDateTime.now().plusMinutes(1)); // срок действия 1 минута
-
         repository.save(confirmationCode);
-
-        //Вернуть код
+        // Вернуть код
         return code;
     }
 
@@ -45,6 +38,7 @@ public class ConfirmationCodeServiceImpl implements ConfirmationCodeService {
     public Optional<ConfirmationCode> findCodeByUser(User user) {
         return repository.findCodeByUser(user);
     }
+
     @Override
     public void remove(ConfirmationCode code) {
         repository.delete(code);
@@ -54,5 +48,4 @@ public class ConfirmationCodeServiceImpl implements ConfirmationCodeService {
     public Optional<ConfirmationCode> findByCode(String code) {
         return repository.findByCode(code);
     }
-
 }

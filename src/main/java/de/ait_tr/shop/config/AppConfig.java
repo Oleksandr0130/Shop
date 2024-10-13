@@ -9,28 +9,23 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * @author Sergey Bugaenko
- * {@code @date} 02.09.2024
- */
-
 @Configuration
 public class AppConfig {
 
     @Bean
-    public AmazonS3 doClient(DoProperties doProperties) {
+    public AmazonS3 doClient(DoProperties doProp) {
 
-        //Создание объекта, который содержит ключи доступа
+        // Создание обьекта, который содержит ключи доступа
         AWSCredentials awsCredentials = new BasicAWSCredentials(
-                doProperties.getAccessKey(),
-                doProperties.getSecretKey()
+                doProp.getAccessKey(),
+                doProp.getSecretKey()
         );
 
-        // Создание объекта с информацией о подключении
+        // Создание обьекта с инфо о подключении
         AwsClientBuilder.EndpointConfiguration endpointConfiguration =
                 new AwsClientBuilder.EndpointConfiguration(
-                        doProperties.getUrl(),
-                        doProperties.getRegion()
+                        doProp.getUrl(),
+                        doProp.getRegion()
                 );
 
         AmazonS3ClientBuilder clientBuilder = AmazonS3ClientBuilder.standard()

@@ -5,11 +5,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * @author Sergey Bugaenko
- * {@code @date} 29.08.2024
- */
-
 @RestController
 @RequestMapping("/hello")
 public class HelloController {
